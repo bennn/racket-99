@@ -1,4 +1,5 @@
 #lang racket
+;; nth element
 
 (define (element-at xs i)
   (if (empty? xs)

@@ -1,5 +1,5 @@
 #lang racket
-; Find the last box in a list
+;; Find the last box in a list
 
 (define (my-last-acc prev xs)
   (if (empty? xs)
