@@ -4,6 +4,6 @@
 (define (my-duplicate xs)
   (if (empty? xs)
       empty
-      (cons (first xs) (cons (first xs) (my-duplicate (rest xs))))))
+      (cons (car xs) (cons (car xs) (my-duplicate (cdr xs))))))
 
 (provide my-duplicate)
