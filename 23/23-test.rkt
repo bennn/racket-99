@@ -5,7 +5,7 @@
 
 ;; Generate the random picks, make sure that each pick is a member of the input list
 ;; Also check that result is correct length
- (define (check-inv inlist i)
+(define (check-inv inlist i)
   (let ([result (my-rnd-select inlist i)])
     (check-equal? i (length result))
     (foldl (lambda (a x) (or a (list? (member x inlist)))) '#f result)))
