@@ -12,5 +12,13 @@
         [(< n m) (my-gcd-cond (- m n) n)]
         [else (my-gcd-cond (- n m) m)]))
 
+(define (my-gcd-match n m)
+  (match (cons n m)
+    [(cons 0 m) m]
+    [(cons n 0) n]
+    [(cons n m) #:when (< n m) (my-gcd-match (- m n) n)]
+    [_ (my-gcd-match (- n m) m)]))
+
 (provide my-gcd-if
-         my-gcd-cond)
+         my-gcd-cond
+         my-gcd-match)

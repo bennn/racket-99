@@ -16,3 +16,10 @@
 (check-equal? (my-gcd-cond 541 3321) 1)
 (check-equal? (my-gcd-cond 18 12) 6)
 (check-equal? (my-gcd-cond 99 17) 1)
+
+(check-equal? (my-gcd-match 36 63) 9)
+(check-equal? (my-gcd-match 1 1) 1)
+(check-equal? (my-gcd-match 9135 5) 5)
+(check-equal? (my-gcd-match 541 3321) 1)
+(check-equal? (my-gcd-match 18 12) 6)
+(check-equal? (my-gcd-match 99 17) 1)
