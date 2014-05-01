@@ -63,6 +63,8 @@
       empty))
   ;; get all ways of grouping a list of 9 elements into groups of size 2, 3, 4
 
+;; HEY this problem doesn't need much code
+
 ;; (define (groups-of-n n xs)
 ;;   (cond [(< n 2) empty]
 ;;         [(= n 2) (groups-of-two xs)]
