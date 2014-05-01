@@ -15,4 +15,6 @@
 (check-equal? (my-prime-factors-mult 131) (list (cons 131 1)))
 (check-equal? (my-prime-factors-mult 99) (list (cons 3 2) (cons 11 1)))
 (check-equal? (my-prime-factors-mult 5412) (list (cons 2 2) (cons 3 1) (cons 11 1) (cons 41 1)))
-(check-equal? (my-prime-factors-mult 64) (list (cons 2 6)))
+
+(check-equal? (my-prime-factors-mult 91) (list (cons 7 1) (cons 13 1)))
+(check-equal? (my-prime-factors-mult 144) (list (cons 2 4) (cons 3 2)))

@@ -19,3 +19,6 @@
 (check-equal? (is-prime -1) #f)
 (check-equal? (is-prime -9) #f)
 (check-equal? (is-prime -1110) #f)
+
+(check-equal? (is-prime 91) #f)
+(check-equal? (is-prime 144) #f)
