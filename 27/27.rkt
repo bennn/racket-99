@@ -62,17 +62,28 @@
       (reverse (foldl (lambda (of-two acc) (append (group3-aux of-two xs) acc)) empty (groups-of-two xs)))
       empty))
   ;; get all ways of grouping a list of 9 elements into groups of size 2, 3, 4
-  
 
-;; (define (group-by-size xs size)
-;;   ; divide list into groups of size 'size'
+;; (define (groups-of-n n xs)
+;;   (cond [(< n 2) empty]
+;;         [(= n 2) (groups-of-two xs)]
+;;         [(= n 3) (groups-of-three xs)]
+;;         [else empty]))
+
+;; (define (group-aux xs sizes acc)
+;;   (match sizes
+;;     ['() acc]
+;;     [(cons h t) (
+;;                  group-aux xs t new-acc)]
+;;   ))
 
 ;; (define (group xs sizes)
-;;   ; divide list into groups. One new list for each element of 'sizes'
-;;   ; pick one group from each of groups.
-;; )
-
-;; (define (group3 xs) (group xs (list 2 3 4)))
+;;   ;; Divide list into groups. One new list for each element of 'sizes'
+;;   ;; Pick one group from each of groups.
+;;   (match sizes
+;;     ['() empty]
+;;     [(cons h t)
+;;      ;; Recurse on each group of size h, 
+;;      ()]))
 
 (provide pairwith
          groupwith
