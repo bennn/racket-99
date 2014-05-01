@@ -24,6 +24,10 @@
   ;; Create pairs of (x,y) for each y in xs
   (foldl (lambda (y acc) (cons (cons x y) acc)) empty xs))
 
+(define (groupwith x xs)
+  ;; Similar to pairwith, but assumes elements of xs are lists themselves
+  (foldl (lambda (ys acc) (cons (append (list x) ys) acc)) empty xs))
+
 ;; (define (group-by-size xs size)
 ;;   ; divide list into groups of size 'size'
 
@@ -35,6 +39,7 @@
 ;; (define (group3 xs) (group xs (list 2 3 4)))
 
 (provide pairwith
+         groupwith
          ;; group
          ;; group3
          )
