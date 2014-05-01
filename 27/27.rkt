@@ -1,4 +1,5 @@
 #lang racket
+;; (require racket/contract)
 
 ;;;; duuuude this problem is no fun.
 
@@ -44,8 +45,24 @@
     [(list x y z) (list (list x y z))]
     [(cons h1 (cons h2 t)) (append (groupwith h1 (pairwith h2 t)) (groups-of-three (cons h2 t)))]))
 
-;; (define (group3 xs)
-;;   (let ([of-two 
+(define (group3-aux of-two xs)
+  ;; Accept a list of two elements and the original list.
+  ;; Get all groups of three from (xs - of-two), combine each groups of 3 with the group of 2 and the final tail
+  (let ([tail (filter (lambda (x) (not (member x of-two))) xs)])
+    ;; For each group of 3, get the tail tail and return the 3 groups
+    (foldl (lambda (of-three acc) (cons (list of-two of-three (filter (lambda (x) (not (member x of-three))) tail)) acc))
+           empty
+           (groups-of-three tail))))
+
+(define (group3 xs)
+  ;; TODO use define/contract
+  ;; (#:pre (= 9 (length xs)))
+  ;; (list? #:pre (= 9 (length xs)) . -> . list? )
+  (if (= 9 (length xs))
+      (reverse (foldl (lambda (of-two acc) (append (group3-aux of-two xs) acc)) empty (groups-of-two xs)))
+      empty))
+  ;; get all ways of grouping a list of 9 elements into groups of size 2, 3, 4
+  
 
 ;; (define (group-by-size xs size)
 ;;   ; divide list into groups of size 'size'
@@ -61,6 +78,6 @@
          groupwith
          groups-of-two
          groups-of-three
+         group3
          ;; group
-         ;; group3
          )
