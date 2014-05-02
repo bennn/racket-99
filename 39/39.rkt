@@ -1,5 +1,8 @@
 #lang racket
 
+(require net/url)
+(require net/http-client)
+
 (define (from n)
   ;; Stream of naturals starting at n
   (stream-cons n (from (add1 n))))
@@ -21,4 +24,21 @@
   ;; Enter a loop to collect all primes
   (reverse (primes-loop lo hi gen-primes empty)))
 
-(provide primes-in-range)
+;; (define primes-url
+;;   (string->url
+;;    "http://primes.utm.edu/lists/small/10000.txt"))
+
+;; (define (stream-of-html f)
+;;   (let* ([f (get-pure-port primes-url)]
+;;          [_ (read-string 177 primes-url)]
+;;          [advance (lambda () ())])
+;;     (stream-cons advance
+    
+;; (define (primes-html lo hi)
+;;   ;; Scrape primes from the web
+;;   (if (< 104729 hi) #f ; Can't generate past the first 10,000
+;;       (primes-loop lo hi (stream-of-html primes-url) empty)))
+
+(provide primes-in-range
+         ;; primes-html
+         )
