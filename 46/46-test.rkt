@@ -40,3 +40,6 @@
 (check-equal? (eq/2 #f #t) #f)
 (check-equal? (eq/2 #t #f) #f)
 (check-equal? (eq/2 #f #f) #t)
+
+(check-exn exn:fail? (lambda () (eq/2 1 1)))
+(check-exn exn:fail? (lambda () (eq/2 empty empty)))
