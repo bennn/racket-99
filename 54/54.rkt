@@ -8,4 +8,11 @@
         [(empty? (cdddr t)) (and (istree (cadr t)) (istree (caddr t)))]
         [else #f]))
 
-(provide istree)
+(define (istree-match t)
+  (match t
+    ['() #t]
+    [(list _ l r) (and (istree-match l) (istree-match r))]
+    [_ #f]))
+
+(provide istree
+         istree-match)
