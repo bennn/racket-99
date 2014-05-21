@@ -10,7 +10,7 @@
 (define (list->bst_aux xs t)
   (match xs
     ['() t]
-    [(cons h t) (list->bst_aux t (bst-insert t h))]))
+    [(cons a b) (list->bst_aux b (bst-insert t a))]))
 
 (define (list->bst xs)
   (list->bst_aux xs empty))
