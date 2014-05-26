@@ -2,9 +2,10 @@
 
 ;; is tree, typed
 
-(define-type (Tree a) (U Leaf (Node a)))
 (struct: Leaf ())
-(struct: (a) Node ([v : a] [left : Tree] [right : Tree]))
+;; (struct: (A) Node ([left : Tree] [right : Tree]))
+(struct: (A) Node ([val : A] [left : (Tree A)] [right : (Tree A)]))
+(define-type (Tree A) (U Leaf (Node A)))
 
 (: is-tree (All (A) ((Tree A) -> Boolean)))
 (define (is-tree t)
@@ -13,5 +14,5 @@
 (provide is-tree)
 
 (assert (is-tree (Leaf)))
-;; (assert (is-tree (Node 1 (Leaf) (Leaf))))
-;; (assert (is-tree (Node "A" Leaf (Node "B" Leaf Leaf))))
+(assert (is-tree (Node 1 (Leaf) (Leaf))))
+(assert (is-tree (Node "A" (Leaf) (Node "B" (Leaf) (Leaf)))))
