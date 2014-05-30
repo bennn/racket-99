@@ -33,8 +33,13 @@
     [(list 'eq/2 a b) (eq (eval a env) (eval b env))]
     [var (lookup env var)]))
 
-;; (define (table/2 exp varA varB)
-;;   ;; evaluate [exp] with every combination of truth values for [varA] and [varB]
-;;   (eval exp (list varA varB)))
+(define (table/2 exp varA varB)
+  ;; evaluate [exp] with every combination of truth values for [varA] and [varB]
+  (printf " ~a  ~a |  R\n" varA varB)
+  (printf "----------\n")
+  (for-each (lambda (env)
+              (printf "~a ~a | ~a\n" (lookup env varA) (lookup env varB) (eval exp env))
+              ) (list (list) (list varA) (list varB) (list varA varB))))
 
-(provide eval)
+(provide eval
+         table/2)

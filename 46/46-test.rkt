@@ -54,3 +54,4 @@
 (check-equal? (eval (list 'eq/2 'A 'B) (list 'A)) #f)
 (check-equal? (eval (list 'eq/2 'A 'B) (list )) #t)
 
+(table/2 (list 'and/2 'A 'B) 'A 'B)
