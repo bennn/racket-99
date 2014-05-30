@@ -1,3 +1,0 @@
-2014-05-03: Got bored, not sure how to do the eval with predicates. It's really boring.
-
-2014-05-07: Need to parse the expression. That's interesting.
