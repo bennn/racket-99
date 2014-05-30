@@ -3,43 +3,54 @@
 (require "46.rkt"
          rackunit)
 
-(check-equal? (not/1 #t) #f)
-(check-equal? (not/1 #f) #t)
+;and
+(check-equal? (eval (list 'and/2 'A 'A) (list 'A)) #t)
+(check-equal? (eval (list 'and/2 'A 'B) (list 'A 'B)) #t)
+(check-equal? (eval (list 'and/2 'A 'A) '()) #f)
+(check-equal? (eval (list 'and/2 'B 'A) '(list 'A)) #f)
 
-(check-equal? (and/2 #t #t) #t)
-(check-equal? (and/2 #f #t) #f)
-(check-equal? (and/2 #t #f) #f)
-(check-equal? (and/2 #f #f) #f)
+;or
+(check-equal? (eval (list 'or/2 'A 'A) '()) #f)
+(check-equal? (eval (list 'or/2 'A 'A) (list 'A)) #t)
+(check-equal? (eval (list 'or/2 'A 'B) (list 'A 'B)) #t)
+(check-equal? (eval (list 'or/2 'C 'D) (list 'A 'B)) #f)
 
-(check-equal? (or/2 #t #t) #t)
-(check-equal? (or/2 #f #t) #t)
-(check-equal? (or/2 #t #f) #t)
-(check-equal? (or/2 #f #f) #f)
+; and/or
+(check-equal? (eval (list 'or/2 (list 'and/2 'A 'A) (list 'and/2 'A 'A)) (list 'A)) #t)
+(check-equal? (eval (list 'or/2 (list 'and/2 'A 'A) (list 'and/2 'A 'B)) (list 'A)) #t)
+(check-equal? (eval (list 'or/2 (list 'and/2 'A 'B) (list 'and/2 'A 'B)) (list 'A 'B)) #t)
+(check-equal? (eval (list 'or/2 (list 'and/2 'B 'B) (list 'and/2 'A 'A)) (list 'B)) #t)
 
-(check-equal? (nand/2 #t #t) #f)
-(check-equal? (nand/2 #f #t) #t)
-(check-equal? (nand/2 #t #f) #t)
-(check-equal? (nand/2 #f #f) #t)
+(check-equal? (eval (list 'and/2 (list 'or/2 (list 'and/2 'A 'A) (list 'and/2 'A 'A)) 'A) (list 'A)) #t)
+(check-equal? (eval (list 'and/2 (list 'or/2 (list 'and/2 'B 'B) (list 'and/2 'B 'B)) 'A) (list 'B)) #f)
 
-(check-equal? (nor/2 #t #t) #f)
-(check-equal? (nor/2 #f #t) #f)
-(check-equal? (nor/2 #t #f) #f)
-(check-equal? (nor/2 #f #f) #t)
+;nand
+(check-equal? (eval (list 'nand/2 'A 'B) (list 'A 'B)) #f)
+(check-equal? (eval (list 'nand/2 'A 'B) (list 'B)) #t)
+(check-equal? (eval (list 'nand/2 'A 'B) (list 'A)) #t)
+(check-equal? (eval (list 'nand/2 'A 'B) (list )) #t)
 
-(check-equal? (xor/2 #t #t) #f)
-(check-equal? (xor/2 #f #t) #t)
-(check-equal? (xor/2 #t #f) #t)
-(check-equal? (xor/2 #f #f) #f)
+;nor
+(check-equal? (eval (list 'nor/2 'A 'B) (list 'A 'B)) #f)
+(check-equal? (eval (list 'nor/2 'A 'B) (list 'B)) #f)
+(check-equal? (eval (list 'nor/2 'A 'B) (list 'A)) #f)
+(check-equal? (eval (list 'nor/2 'A 'B) (list )) #t)
 
-(check-equal? (impl/2 #t #t) #t)
-(check-equal? (impl/2 #f #t) #t)
-(check-equal? (impl/2 #t #f) #f)
-(check-equal? (impl/2 #f #f) #t)
+;xor
+(check-equal? (eval (list 'xor/2 'A 'B) (list 'A 'B)) #f)
+(check-equal? (eval (list 'xor/2 'A 'B) (list 'B)) #t)
+(check-equal? (eval (list 'xor/2 'A 'B) (list 'A)) #t)
+(check-equal? (eval (list 'xor/2 'A 'B) (list )) #f)
 
-(check-equal? (eq/2 #t #t) #t)
-(check-equal? (eq/2 #f #t) #f)
-(check-equal? (eq/2 #t #f) #f)
-(check-equal? (eq/2 #f #f) #t)
+;imp
+(check-equal? (eval (list 'imp/2 'A 'B) (list 'A 'B)) #t)
+(check-equal? (eval (list 'imp/2 'A 'B) (list 'B)) #t)
+(check-equal? (eval (list 'imp/2 'A 'B) (list 'A)) #f)
+(check-equal? (eval (list 'imp/2 'A 'B) (list )) #t)
 
-(check-exn exn:fail? (lambda () (eq/2 1 1)))
-(check-exn exn:fail? (lambda () (eq/2 empty empty)))
+;eq
+(check-equal? (eval (list 'eq/2 'A 'B) (list 'A 'B)) #t)
+(check-equal? (eval (list 'eq/2 'A 'B) (list 'B)) #f)
+(check-equal? (eval (list 'eq/2 'A 'B) (list 'A)) #f)
+(check-equal? (eval (list 'eq/2 'A 'B) (list )) #t)
+

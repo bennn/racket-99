@@ -1,41 +1,40 @@
 #lang racket
 
-(require racket/contract)
+(define (lookup env var)
+  ;; var is a quoted atom
+  (match env
+    ['() #f]
+    [(cons h _) #:when (equal? h var) #t]
+    [(cons _ t) (lookup t var)]))
 
-(define (nand/2 a b)
+(define (imp a b)
+  ;; a => b
   (match (cons a b)
-    [(cons #t #t) #f]
+    [(cons #t #t) #t]
+    [(cons #t #f) #f]
     [(cons #f #t) #t]
-    [(cons #t #f) #t]
     [(cons #f #f) #t]))
 
-(define (not/1 a)
-  (nand/2 a a))
+(define (eq a b)
+  (match (cons a b)
+    [(cons #t #t) #t]
+    [(cons #t #f) #f]
+    [(cons #f #t) #f]
+    [(cons #f #f) #t]))
 
-(define (and/2 a b)
-  (not/1 (nand/2 a b)))
+(define (eval exp env)
+  (match exp
+    [(list 'and/2 a b) (and (eval a env) (eval b env))]
+    [(list 'or/2 a b) (or (eval a env) (eval b env))]
+    [(list 'nand/2 a b) (not (and (eval a env) (eval b env)))]
+    [(list 'nor/2 a b) (not (or (eval a env) (eval b env)))]
+    [(list 'xor/2 a b) (xor (eval a env) (eval b env))]
+    [(list 'imp/2 a b) (imp (eval a env) (eval b env))]
+    [(list 'eq/2 a b) (eq (eval a env) (eval b env))]
+    [var (lookup env var)]))
 
-(define (or/2 a b)
-  (nand/2 (not/1 a) (not/1 b)))
+;; (define (table/2 exp varA varB)
+;;   ;; evaluate [exp] with every combination of truth values for [varA] and [varB]
+;;   (eval exp (list varA varB)))
 
-(define (nor/2 a b)
-  (not/1 (or/2 a b)))
-
-(define (xor/2 a b)
-  (and/2 (or/2 a b) (nand/2 a b)))
-
-(define (impl/2 a b)
-  (not/1 (and/2 a (not/1 b))))
-
-(define/contract (eq/2 a b)
-  (boolean? boolean? . -> . boolean?)
-  (equal? a b))
-
-(provide not/1
-         and/2
-         or/2
-         nand/2
-         nor/2
-         xor/2
-         impl/2
-         eq/2)
+(provide eval)
