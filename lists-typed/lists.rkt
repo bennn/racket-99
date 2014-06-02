@@ -15,4 +15,6 @@
     [(Cons x (Nil)) (Some x)]
     [(Cons _ t) (find-last t)]))
 
+(assert (= 0 (match (find-last (Nil)) [(None) 0] [(Some x) 1])))
 (assert (= 1 (match (find-last (Cons 2 (Cons 1 (Nil)))) [(None) 0] [(Some x) x])))
+(assert (= 3 (match (find-last (Cons 2 (Cons 1 (Cons 3 (Nil))))) [(None) 0] [(Some x) x])))
