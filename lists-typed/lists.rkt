@@ -18,3 +18,21 @@
 (assert (= 0 (match (find-last (Nil)) [(None) 0] [(Some x) 1])))
 (assert (= 1 (match (find-last (Cons 2 (Cons 1 (Nil)))) [(None) 0] [(Some x) x])))
 (assert (= 3 (match (find-last (Cons 2 (Cons 1 (Cons 3 (Nil))))) [(None) 0] [(Some x) x])))
+
+(: kth (All (A) ((List A) Integer -> (Option A))))
+(define (kth xs n)
+  (match xs
+    [(Nil) (None)]
+    [(Cons h t) (if (< n 0)
+                    (None)
+                (if (= n 0)
+                    (Some h)
+                    (kth t (sub1 n))))]))
+
+(assert (= 0 (match (kth (Nil) 0) [(None) 0] [(Some x) 1])))
+(assert (= 0 (match (kth (Nil) 1) [(None) 0] [(Some x) 1])))
+(assert (= 0 (match (kth (Nil) -2) [(None) 0] [(Some x) 1])))
+(assert (= 2 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 0) [(None) 0] [(Some x) x])))
+(assert (= 1 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 1) [(None) 0] [(Some x) x])))
+(assert (= 3 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 2) [(None) 0] [(Some x) x])))
+(assert (= 0 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 3) [(None) 0] [(Some x) x])))
