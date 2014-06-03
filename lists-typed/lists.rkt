@@ -36,3 +36,14 @@
 (assert (= 1 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 1) [(None) 0] [(Some x) x])))
 (assert (= 3 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 2) [(None) 0] [(Some x) x])))
 (assert (= 0 (match (kth (Cons 2 (Cons 1 (Cons 3 (Nil)))) 3) [(None) 0] [(Some x) x])))
+
+(: length (All (A) ((List A) -> Integer)))
+(define (length xs)
+  (match xs
+    [(Nil) 0]
+    [(Cons h t) (+ 1 (length t))]))
+
+(assert (= 0 (length (Nil))))
+(assert (= 1 (length (Cons 9 (Nil)))))
+(assert (= 4 (length (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
+
