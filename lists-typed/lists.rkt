@@ -47,3 +47,21 @@
 (assert (= 1 (length (Cons 9 (Nil)))))
 (assert (= 4 (length (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
 
+(: foldl (All (A B) ((A B -> A) A (List B) -> A)))
+(define (foldl f acc xs)
+  (match xs
+    [(Nil) acc]
+    [(Cons h t) (foldl f (f acc h) t)]))
+
+(: eqlist (All (A) ((A A -> Boolean) (List A) (List A) -> Boolean)))
+(define (eqlist p xs ys)
+  (match xs
+    [(Nil) (match ys [(Nil) #t] [(Cons a b) #f])]
+    [(Cons x xs) (match ys [(Nil) #f] [(Cons y ys) (and (p x y) (eqlist p xs ys))])]))
+
+(: reverse (All (A) ((List A) -> (List A))))
+(define (reverse xs)
+  (foldl (lambda: ([acc : (List A)] [x : A]) (Cons x acc)) (Nil) xs))
+   
+(assert (eqlist = (Cons 3 (Cons 2 (Cons 1 (Nil)))) (reverse (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
+(assert (eqlist = (Nil) (reverse (Nil))))
