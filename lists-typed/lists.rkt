@@ -74,8 +74,25 @@
 
 (assert (let ([xs (Cons 1 (Cons 2 (Cons 3 (Nil))))]) (eqlist = xs (foldr (lambda: ([x : Integer] [acc : (List Integer)]) (Cons x acc)) xs (Nil)))))
 
-(: map (All (A B) ((A -> B) (List A) -> (List B))))
-(define (map f xs)
+(: map-foldr (All (A B) ((A -> B) (List A) -> (List B))))
+(define (map-foldr f xs)
   (foldr (lambda: ([x : A] [acc : (List B)]) (Cons (f x) acc)) xs (Nil)))
 
-(assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
+(assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map-foldr (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
+
+(: foldr-cps (All (A B) ((A B -> B) (List A) B -> B)))
+(define (foldr-cps f xs acc)
+  (: foldr-cps-aux ((List A) (B -> B) -> B))
+  (define (foldr-cps-aux xs k)
+    (match xs
+      [(Nil) (k acc)]
+      [(Cons h t) (foldr-cps-aux t (lambda: ([z : B]) (k (f h z))))]))
+  (foldr-cps-aux xs (lambda: ([x : B]) x)))
+
+(assert (let ([xs (Cons 1 (Cons 2 (Cons 3 (Nil))))]) (eqlist = xs (foldr-cps (lambda: ([x : Integer] [acc : (List Integer)]) (Cons x acc)) xs (Nil)))))
+
+(: map-cps (All (A B) ((A -> B) (List A) -> (List B))))
+(define (map-cps f xs)
+  (foldr-cps (lambda: ([x : A] [acc : (List B)]) (Cons (f x) acc)) xs (Nil)))
+
+(assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map-cps (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
