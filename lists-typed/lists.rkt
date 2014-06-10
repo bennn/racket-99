@@ -104,3 +104,14 @@
                     (Cons (Cons x (Nil)) (Cons (Cons x ys) acc))) acc acc))
          (Cons (Nil) (Nil)) xs))
 
+(: eqlistlist (All (A) ((A A -> Boolean) (List (List A)) (List (List A)) -> Boolean)))
+(define (eqlistlist p xs ys)
+  (match xs
+    [(Nil) (match ys
+             [(Nil) #t]
+             [(Cons _ _ ) #f])]
+    [(Cons h t) (match ys
+                  [(Nil) #f]
+                  [(Cons j y) (and (eqlist p h j) (eqlistlist p t y))])]))
+
+(assert (eqlistlist = (Cons (Nil) (Nil)) (powerset (Nil))))
