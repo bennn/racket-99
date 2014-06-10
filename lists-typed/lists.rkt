@@ -96,3 +96,11 @@
   (foldr-cps (lambda: ([x : A] [acc : (List B)]) (Cons (f x) acc)) xs (Nil)))
 
 (assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map-cps (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
+
+(: powerset (All (A) ((List A) -> (List (List A)))))
+(define (powerset xs)
+  (foldl (lambda: ([acc : (List (List A))] [x : A])
+           (foldl (lambda: ([acc : (List (List A))] [ys : (List A)])
+                    (Cons (Cons x (Nil)) (Cons (Cons x ys) acc))) acc acc))
+         (Cons (Nil) (Nil)) xs))
+
