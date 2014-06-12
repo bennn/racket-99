@@ -114,7 +114,21 @@
                   [(Nil) #f]
                   [(Cons j y) (and (eqlist p h j) (eqlistlist p t y))])]))
 
-;; (: printlist 
+(: print-aux (All (A) ((A -> String) (List A) -> String)))
+(define (print-aux f xs)
+  (match xs
+    [(Nil) ""]
+    [(Cons h (Nil)) (f h)]
+    [(Cons h t) (format "~a; ~a" (f h) (print-aux f t))]))
+
+(: print (All (A) ((A -> String) (List A) -> String)))
+(define (print f xs)
+  (format "(~a)" (print-aux f xs)))
+
+;; (assert (equal? "()" (print (lambda: ([x : Integer]) (format "~a" x)) (Nil))))
+(assert (equal? "(1; 2)" (print (lambda: ([x : Integer]) (format "~a" x)) (Cons 1 (Cons 2 (Nil))))))
+;; (print (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
+;; (print (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
 
 (assert (eqlistlist = (Cons (Nil) (Nil)) (powerset (Nil))))
 (assert (= 1 (match (powerset (Cons 1 (Cons 2 (Nil))))
