@@ -99,10 +99,10 @@
 
 (: powerset (All (A) ((List A) -> (List (List A)))))
 (define (powerset xs)
-  (foldl (lambda: ([acc : (List (List A))] [x : A])
+  (foldl (lambda: ([acc : (List (List A))] [x : (List A)]) (Cons (reverse x) acc)) (Nil) (foldl (lambda: ([acc : (List (List A))] [x : A])
            (foldl (lambda: ([acc : (List (List A))] [ys : (List A)])
                     (Cons (Cons x (Nil)) (Cons (Cons x ys) acc))) acc acc))
-         (Cons (Nil) (Nil)) xs))
+         (Cons (Nil) (Nil)) xs)))
 
 (: eqlistlist (All (A) ((A A -> Boolean) (List (List A)) (List (List A)) -> Boolean)))
 (define (eqlistlist p xs ys)
@@ -114,4 +114,12 @@
                   [(Nil) #f]
                   [(Cons j y) (and (eqlist p h j) (eqlistlist p t y))])]))
 
+;; (: printlist 
+
 (assert (eqlistlist = (Cons (Nil) (Nil)) (powerset (Nil))))
+(assert (= 1 (match (powerset (Cons 1 (Cons 2 (Nil))))
+               [(Cons h1 (Cons h2 t)) (match h2 [(Cons h t) h] [(Nil) 0])]
+               [_ 0])))
+;; (assert (eqlistlist =
+;;                     (Cons (Nil) (Cons (Cons 1 (Nil)) (Cons (Cons 2 (Nil)) (Cons (Cons 1 (Cons 2 (Nil))) (Nil)))))
+;;                     (powerset (Cons 1 (Cons 2 (Nil))))))
