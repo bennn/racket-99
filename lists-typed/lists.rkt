@@ -137,3 +137,9 @@
 ;; (assert (eqlistlist =
 ;;                     (Cons (Nil) (Cons (Cons 1 (Nil)) (Cons (Cons 2 (Nil)) (Cons (Cons 1 (Cons 2 (Nil))) (Nil)))))
 ;;                     (powerset (Cons 1 (Cons 2 (Nil))))))
+
+(: filter (All (A) ((A -> Boolean) (List A) -> (List A))))
+(define (filter f xs)
+  (foldr-cps (lambda: ([x : A] [acc : (List A)]) (if (f x) (Cons x acc) acc)) xs (Nil)))
+
+(assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (filter (lambda: ([x : Integer]) (> x 1)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
