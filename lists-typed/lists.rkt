@@ -121,14 +121,14 @@
     [(Cons h (Nil)) (f h)]
     [(Cons h t) (format "~a; ~a" (f h) (print-aux f t))]))
 
-(: print (All (A) ((A -> String) (List A) -> String)))
-(define (print f xs)
+(: print-list (All (A) ((A -> String) (List A) -> String)))
+(define (print-list f xs)
   (format "(~a)" (print-aux f xs)))
 
-;; (assert (equal? "()" (print (lambda: ([x : Integer]) (format "~a" x)) (Nil))))
-(assert (equal? "(1; 2)" (print (lambda: ([x : Integer]) (format "~a" x)) (Cons 1 (Cons 2 (Nil))))))
-;; (print (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
-;; (print (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
+;; (assert (equal? "()" (print-list (lambda: ([x : Integer]) (format "~a" x)) (Nil))))
+(assert (equal? "(1; 2)" (print-list (lambda: ([x : Integer]) (format "~a" x)) (Cons 1 (Cons 2 (Nil))))))
+;; (print-list (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
+;; (print-list (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
 
 (assert (eqlistlist = (Cons (Nil) (Nil)) (powerset (Nil))))
 (assert (= 1 (match (powerset (Cons 1 (Cons 2 (Nil))))
@@ -155,7 +155,22 @@
 (assert (eqlist = (Cons 8 (Cons 9 (Cons 10 (Nil)))) (append (Nil) (Cons 8 (Cons 9 (Cons 10 (Nil)))))))
 (assert (eqlist = (Cons 8 (Cons 9 (Cons 10 (Nil)))) (append (Cons 8 (Cons 9 (Cons 10 (Nil)))) (Nil))))
 
-;; (: quicksort (All (A) ((List A) -> (List A))))
-;; (define (quicksort xs)
+(: not (Boolean -> Boolean))
+(define (not b)
+  (if b #f #t))
+
+(: quicksort (All (A) ((A A -> Boolean) (List A) -> (List A))))
+(define (quicksort f xs)
+  (match xs
+    [(Nil) (Nil)]
+    [(Cons h t) (append (quicksort f (filter (lambda: ([x : A]) (f x h)) t))
+                        (Cons h (quicksort f (filter (lambda: ([x : A]) (not (f x h))) t))))]))
+
+(assert (eqlist = (Nil) (quicksort < (Nil))))
+(assert (eqlist = (Cons 1 (Nil)) (quicksort < (Cons 1 (Nil)))))
+(assert (eqlist = (Cons 1 (Cons 3 (Nil)))
+                (quicksort < (Cons 1 (Cons 3 (Nil))))))
+(assert (eqlist = (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Nil))))))
+                (quicksort < (Cons 5 (Cons 1 (Cons 4 (Cons 2 (Cons 3 (Nil)))))))))
 
 ;; (: mergesort (All (A) ((List A) -> (List A))))
