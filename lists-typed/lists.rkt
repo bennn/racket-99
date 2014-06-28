@@ -143,3 +143,19 @@
   (foldr-cps (lambda: ([x : A] [acc : (List A)]) (if (f x) (Cons x acc) acc)) xs (Nil)))
 
 (assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (filter (lambda: ([x : Integer]) (> x 1)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
+
+(: append (All (A) ((List A) (List A) -> (List A))))
+(define (append xs ys)
+  (foldr-cps (lambda: ([x : A] [acc : (List A)]) (Cons x acc)) xs ys))
+
+(assert (eqlist = (Cons 1 (Cons 2 (Cons 2 (Cons 1 (Nil)))))
+                (append (Cons 1 (Cons 2 (Nil)))
+                        (Cons 2 (Cons 1 (Nil))))))
+
+(assert (eqlist = (Cons 8 (Cons 9 (Cons 10 (Nil)))) (append (Nil) (Cons 8 (Cons 9 (Cons 10 (Nil)))))))
+(assert (eqlist = (Cons 8 (Cons 9 (Cons 10 (Nil)))) (append (Cons 8 (Cons 9 (Cons 10 (Nil)))) (Nil))))
+
+;; (: quicksort (All (A) ((List A) -> (List A))))
+;; (define (quicksort xs)
+
+;; (: mergesort (All (A) ((List A) -> (List A))))
