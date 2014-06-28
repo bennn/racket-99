@@ -15,6 +15,7 @@
     [(Cons x (Nil)) (Some x)]
     [(Cons _ t) (find-last t)]))
 
+(displayln "find-last tests")
 (assert (= 0 (match (find-last (Nil)) [(None) 0] [(Some x) 1])))
 (assert (= 1 (match (find-last (Cons 2 (Cons 1 (Nil)))) [(None) 0] [(Some x) x])))
 (assert (= 3 (match (find-last (Cons 2 (Cons 1 (Cons 3 (Nil))))) [(None) 0] [(Some x) x])))
@@ -29,6 +30,7 @@
                     (Some h)
                     (kth t (sub1 n))))]))
 
+(displayln "kth tests")
 (assert (= 0 (match (kth (Nil) 0) [(None) 0] [(Some x) 1])))
 (assert (= 0 (match (kth (Nil) 1) [(None) 0] [(Some x) 1])))
 (assert (= 0 (match (kth (Nil) -2) [(None) 0] [(Some x) 1])))
@@ -43,6 +45,7 @@
     [(Nil) 0]
     [(Cons h t) (+ 1 (length t))]))
 
+(displayln "length tests")
 (assert (= 0 (length (Nil))))
 (assert (= 1 (length (Cons 9 (Nil)))))
 (assert (= 4 (length (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
@@ -63,6 +66,7 @@
 (define (reverse xs)
   (foldl (lambda: ([acc : (List A)] [x : A]) (Cons x acc)) (Nil) xs))
    
+(displayln "reverse tests")
 (assert (eqlist = (Cons 3 (Cons 2 (Cons 1 (Nil)))) (reverse (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
 (assert (eqlist = (Nil) (reverse (Nil))))
 
@@ -72,12 +76,14 @@
     [(Nil) acc]
     [(Cons x xs) (f x (foldr f xs acc))]))
 
+(displayln "foldr tests")
 (assert (let ([xs (Cons 1 (Cons 2 (Cons 3 (Nil))))]) (eqlist = xs (foldr (lambda: ([x : Integer] [acc : (List Integer)]) (Cons x acc)) xs (Nil)))))
 
 (: map-foldr (All (A B) ((A -> B) (List A) -> (List B))))
 (define (map-foldr f xs)
   (foldr (lambda: ([x : A] [acc : (List B)]) (Cons (f x) acc)) xs (Nil)))
 
+(displayln "map-foldr tests")
 (assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map-foldr (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
 
 (: foldr-cps (All (A B) ((A B -> B) (List A) B -> B)))
@@ -89,12 +95,14 @@
       [(Cons h t) (foldr-cps-aux t (lambda: ([z : B]) (k (f h z))))]))
   (foldr-cps-aux xs (lambda: ([x : B]) x)))
 
+(displayln "foldr-cps tests")
 (assert (let ([xs (Cons 1 (Cons 2 (Cons 3 (Nil))))]) (eqlist = xs (foldr-cps (lambda: ([x : Integer] [acc : (List Integer)]) (Cons x acc)) xs (Nil)))))
 
 (: map-cps (All (A B) ((A -> B) (List A) -> (List B))))
 (define (map-cps f xs)
   (foldr-cps (lambda: ([x : A] [acc : (List B)]) (Cons (f x) acc)) xs (Nil)))
 
+(displayln "map-cps tests")
 (assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (map-cps (lambda: ([x : Integer]) (+ x 1)) (Cons 1 (Cons 2 (Cons 3 (Nil)))))))
 
 (: powerset (All (A) ((List A) -> (List (List A)))))
@@ -125,11 +133,13 @@
 (define (print-list f xs)
   (format "(~a)" (print-aux f xs)))
 
+(displayln "print-list tests")
 ;; (assert (equal? "()" (print-list (lambda: ([x : Integer]) (format "~a" x)) (Nil))))
 (assert (equal? "(1; 2)" (print-list (lambda: ([x : Integer]) (format "~a" x)) (Cons 1 (Cons 2 (Nil))))))
 ;; (print-list (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
 ;; (print-list (lambda: ([x : Integer]) (format "~a" x)) (powerset (Cons 1 (Cons 2 (Nil)))))
 
+(displayln "powerset tests")
 (assert (eqlistlist = (Cons (Nil) (Nil)) (powerset (Nil))))
 (assert (= 1 (match (powerset (Cons 1 (Cons 2 (Nil))))
                [(Cons h1 (Cons h2 t)) (match h2 [(Cons h t) h] [(Nil) 0])]
@@ -142,12 +152,14 @@
 (define (filter f xs)
   (foldr-cps (lambda: ([x : A] [acc : (List A)]) (if (f x) (Cons x acc) acc)) xs (Nil)))
 
+(displayln "filter tests")
 (assert (eqlist = (Cons 2 (Cons 3 (Cons 4 (Nil)))) (filter (lambda: ([x : Integer]) (> x 1)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Nil))))))))
 
 (: append (All (A) ((List A) (List A) -> (List A))))
 (define (append xs ys)
   (foldr-cps (lambda: ([x : A] [acc : (List A)]) (Cons x acc)) xs ys))
 
+(displayln "append tests")
 (assert (eqlist = (Cons 1 (Cons 2 (Cons 2 (Cons 1 (Nil)))))
                 (append (Cons 1 (Cons 2 (Nil)))
                         (Cons 2 (Cons 1 (Nil))))))
@@ -166,6 +178,7 @@
     [(Cons h t) (append (quicksort f (filter (lambda: ([x : A]) (f x h)) t))
                         (Cons h (quicksort f (filter (lambda: ([x : A]) (not (f x h))) t))))]))
 
+(displayln "quicksort tests")
 (assert (eqlist = (Nil) (quicksort < (Nil))))
 (assert (eqlist = (Cons 1 (Nil)) (quicksort < (Cons 1 (Nil)))))
 (assert (eqlist = (Cons 1 (Cons 3 (Nil)))
@@ -173,4 +186,3 @@
 (assert (eqlist = (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Nil))))))
                 (quicksort < (Cons 5 (Cons 1 (Cons 4 (Cons 2 (Cons 3 (Nil)))))))))
 
-;; (: mergesort (All (A) ((List A) -> (List A))))
