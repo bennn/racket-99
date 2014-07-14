@@ -186,3 +186,37 @@
 (assert (eqlist = (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Nil))))))
                 (quicksort < (Cons 5 (Cons 1 (Cons 4 (Cons 2 (Cons 3 (Nil)))))))))
 
+(: split (All (A) ((List A) -> (Pair (List A) (List A)))))
+(define (split xs)
+  (match xs
+    [(Nil) (cons (Nil) (Nil))]
+    [(Cons x (Nil)) (cons (Cons x (Nil)) (Nil))]
+    [(Cons x (Cons y t)) (match (split t)
+                           [(cons l1 l2) (cons (Cons x l1) (Cons y l2))])]))
+                              
+
+(: merge (All (A) ((A A -> Boolean) (List A) (List A) -> (List A))))
+(define (merge f xs ys)
+  (match (cons xs ys)
+    [(cons (Nil) _) ys]
+    [(cons _ (Nil)) xs]
+    [(cons (Cons x xs) (Cons y ys)) (if (f x y)
+                                        (Cons x (merge f xs (Cons y ys)))
+                                        (Cons y (merge f (Cons x xs) ys)))]))
+
+(: mergesort (All (A) ((A A -> Boolean) (List A) -> (List A))))
+(define (mergesort f xs)
+  (match xs
+    [(Nil) (Nil)]
+    [(Cons _ (Nil)) xs]
+    [(Cons _ _)
+     (match (split xs)
+       [(cons l1 l2) (merge f (mergesort f l1) (mergesort f l2))])]))
+
+(displayln "mergesort tests")
+(assert (eqlist = (Nil) (mergesort < (Nil))))
+(assert (eqlist = (Cons 1 (Nil)) (mergesort < (Cons 1 (Nil)))))
+(assert (eqlist = (Cons 1 (Cons 3 (Nil)))
+                (mergesort < (Cons 1 (Cons 3 (Nil))))))
+(assert (eqlist = (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Nil))))))
+                (mergesort < (Cons 5 (Cons 1 (Cons 4 (Cons 2 (Cons 3 (Nil)))))))))
