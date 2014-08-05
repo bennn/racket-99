@@ -8,7 +8,7 @@
 
 (define (my-last xs)
   (if (empty? xs)
-      0
+      #f
       (my-last-acc (first xs) (rest xs))))
   
 (provide my-last)
