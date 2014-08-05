@@ -1,4 +1,5 @@
-;; #lang racket
+#lang racket
+
 (require rackunit
          "1.rkt")
 
