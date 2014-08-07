@@ -57,7 +57,7 @@
   ;; [exp] is a string like "and A B"
   (let ([exp (parse-str str-exp)])
     (begin
-     (printf "Results for expression: ~a\n" str-exp)
+     (printf "\nResults for expression: ~a\nwith free variables ~a\n" str-exp vars)
      ;; Heading has ' V ' for each var V in [vars]
      (displayln (make-heading vars))
      (for-each displayln (format-lines (powerset vars) vars exp))
