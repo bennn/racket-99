@@ -2,24 +2,45 @@
 ;; http://matt.might.net/articles/implementing-a-programming-language/
 
 (define (lookup x env)
-  (printf "lookup ~a\n" x)
+  ;; (printf "lookup ~a\n" x)
   (match env
     ['() #f]
     [(cons (cons k v) t) (if (equal? x k) v (lookup x t))]))
 
 (define (make-lambda e env)
-  (printf "make lambda with e=~a\n" e)
+  ;; (printf "make lambda with e=~a\n" e)
   (cons env (list e)))
+
+(define (const? e)
+  (or (boolean? e)
+      (integer? e)))
+
+(define (closure? e)
+  (and (= 2 (length e))
+       (not (empty (cdr e)))))
+
+(define (lambda? e)
+  (eq? (car e) 'fun))
+
+(define (app? e)
+  (cond ((empty? e)       #f)
+        ((empty? (cdr e)) #f)
+        (else             #t)))
 
 ;eval takes an expression and an environment to a value
 (define (eval e env)
-  (printf "eval ~a\n" e)
+  ;; (printf "eval ~a\n" e)
   (cond
-   ((symbol? e)         (lookup e env))
-   ((boolean? e) e)
-   ((integer? e) e)
-   ((eq? (car e) 'fun)  (make-lambda e env))
-   (else                (apply (eval (car e) env) (eval (cadr e) env)))))
+   ((symbol? e) (lookup e env))
+   ((const? e)   e)
+   ((lambda? e)      (make-lambda e env))
+   ; TODO don't forget the tail of e
+   ((app? e)    (eval (cons (apply (eval (car e) env) (eval (cadr e) env)) (cddr e)) env))
+   (else        (eval (car e) env))))
+    ;; (let ([v ])
+    ;;               (if (empty? (cddr e)) v (eval (cons v (cddr e)) env))))))
+
+
 
 ; apply takes a function and an argument to a value
 (define (apply f x)
@@ -38,6 +59,6 @@
   (printf "> ")
   (let ([input (read)])
     (if (is_exit input) (printf "bye\n")
-        ((displayln (eval input env)) (repl env)))))
+        (begin (displayln (eval input env)) (repl env)))))
 
 (repl '())
