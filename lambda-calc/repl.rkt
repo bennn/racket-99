@@ -61,4 +61,6 @@
     (if (is_exit input) (printf "bye\n")
         (begin (displayln (eval input env)) (repl env)))))
 
-(repl '())
+;; (repl '())
+
+(provide eval)
