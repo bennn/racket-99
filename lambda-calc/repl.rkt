@@ -2,22 +2,21 @@
 ;; http://matt.might.net/articles/implementing-a-programming-language/
 
 (define (lookup x env)
-  ;; (printf "lookup ~a\n" x)
+  (printf "lookup ~a in environment ~a\n" x env)
   (match env
     ['() #f]
     [(cons (cons k v) t) (if (equal? x k) v (lookup x t))]))
 
 (define (make-lambda e env)
   ;; (printf "make lambda with e=~a\n" e)
-  (cons env (list e)))
+  (list 'closure e env))
 
 (define (const? e)
   (or (boolean? e)
       (integer? e)))
 
 (define (closure? e)
-  (and (= 2 (length e))
-       (not (empty (cdr e)))))
+  (eq? (car e) 'closure))
 
 (define (lambda? e)
   (eq? (car e) 'fun))
@@ -43,12 +42,12 @@
 
 
 ; apply takes a function and an argument to a value
-(define (apply f x)
-  (let* ([f-env  (car  f)]
-         [lam    (cadr f)]
-         [f-var  (cadr lam)]
-         [f-body (caddr lam)])
-    (eval f-body (cons (cons f-var x) f-env))))
+(define (apply f val)
+  (match f
+    [(list 'closure e env) (match e
+                             [(list 'fun var exp) (eval exp (cons (cons var val) env))]
+                             [_ (printf "Badly formatted closure\n")])]
+    [_ (printf "Not a closure, cannot apply\n")]))
 
 (define (is_exit input)
   (or (eq? input 'exit)
