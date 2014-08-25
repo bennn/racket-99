@@ -1,6 +1,6 @@
 #lang racket
 
-(require "repl.rkt"
+(require "eval.rkt"
          rackunit)
 
 (check-equal? (eval 5 '()) 5)
