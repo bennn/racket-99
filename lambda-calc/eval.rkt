@@ -18,8 +18,28 @@
 (define (closure? e)
   (eq? (car e) 'closure))
 
+(define (delay? e)
+  (eq? (car e) 'delay))
+
+(define (force? e)
+  (eq? (car e) 'force))
+
+(define (thunk? e)
+  (eq? (car e) 'thunk))
+
+(define (make-thunk e)
+  (cons 'thunk e))
+
+(define (force-thunk e)
+  (if (thunk? e) (cdr e) (printf "Not a thunk, cannot force\n")))
+
 (define (lambda? e)
   (eq? (car e) 'fun))
+
+(define (single? e)
+  (cond ((empty? e)       #f)
+        ((empty? (cdr e)) #t)
+        (else             #f)))
 
 (define (app? e)
   (cond ((empty? e)       #f)
@@ -35,15 +55,18 @@
    ; constants, closures already evaluated
    ((const? e)   e)
    ((closure? e) e)
+   ((delay?   e) (make-thunk (second e)))
+   ((force?   e) (eval (force-thunk (eval (second e) env)) env))
    ; lambda becomes closure
-   ((lambda? e)      (make-lambda e env))
+   ((lambda? e)       (make-lambda e env))
+   ((single? e)  (eval (car e) env))
    ; apply f to value, be aware of partial application
    ((app? e)    (let* ([f (eval (first e)  env)]
                        [v (eval (second e) env)]
                        [r (apply f v)])
                   (if (empty? (cddr e)) r (eval (cons r (cddr e)) env))))
    ; don't know. Assume it's a singleton list.
-   (else        (eval (car e) env))))
+   (else        (printf "Malformed expression ~a\n" e))))
 
 ; apply takes a function and an argument to a value
 (define (apply f val)
