@@ -15,17 +15,20 @@
   (or (boolean? e)
       (integer? e)))
 
+(define (is-tag? t e)
+  (eq? t (car e)))
+
 (define (closure? e)
-  (eq? (car e) 'closure))
+  (is-tag? 'closure e))
 
 (define (delay? e)
-  (eq? (car e) 'delay))
+  (is-tag? 'delay e))
 
 (define (force? e)
-  (eq? (car e) 'force))
+  (is-tag? 'force e))
 
 (define (thunk? e)
-  (eq? (car e) 'thunk))
+  (is-tag? 'thunk e))
 
 (define (make-thunk e)
   (cons 'thunk e))
@@ -34,7 +37,7 @@
   (if (thunk? e) (cdr e) (printf "Not a thunk, cannot force\n")))
 
 (define (lambda? e)
-  (eq? (car e) 'fun))
+  (is-tag? 'fun e))
 
 (define (single? e)
   (cond ((empty? e)       #f)
