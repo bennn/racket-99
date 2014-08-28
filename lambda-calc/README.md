@@ -1,4 +1,5 @@
 lambda-calc
 ===========
 
-Simple lambda calculus interpreter
+Simple lambda calculus interpreter.
+Seriously, as simple as possible.
