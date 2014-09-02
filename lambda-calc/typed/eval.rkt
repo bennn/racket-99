@@ -2,6 +2,7 @@
 
 (define-type Exp Any)
 (define-type Env (Listof (Pairof Symbol Exp)))
+(define-type Const (U Boolean Integer))
 
 (: lookup (Symbol Env -> Exp))
 (define (lookup x env)
@@ -15,7 +16,7 @@
   ;; (printf "make lambda with e=~a\n" e)
   (list 'closure e env))
 
-(: const? (Exp -> Boolean : (U Boolean Integer)))
+(: const? (Exp -> Boolean : Const))
 (define (const? e)
   (or (boolean? e)
       (exact-integer? e)))
