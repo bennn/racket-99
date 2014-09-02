@@ -1,15 +1,20 @@
 #lang typed/racket
 
-(: lookup (Symbol (Listof (Pairof Symbol Any)) -> Any))
+(define-type Exp Any)
+(define-type Env (Listof (Pairof Symbol Exp)))
+
+
+(: lookup (Symbol Env -> Any))
 (define (lookup x env)
   ;; (printf "lookup ~a in environment ~a\n" x env)
   (match env
     ['() #f]
     [(cons (cons k v) t) (if (equal? x k) v (lookup x t))]))
 
-;; (define (make-lambda e env)
-;;   ;; (printf "make lambda with e=~a\n" e)
-;;   (list 'closure e env))
+(: make-lambda ((Listof Any) Env -> (List Symbol Any Env)))
+(define (make-lambda e env)
+  ;; (printf "make lambda with e=~a\n" e)
+  (list 'closure e env))
 
 ;; (define (const? e)
 ;;   (or (boolean? e)
