@@ -3,22 +3,22 @@
 (define-type Exp Any)
 (define-type Env (Listof (Pairof Symbol Exp)))
 
-
-(: lookup (Symbol Env -> Any))
+(: lookup (Symbol Env -> Exp))
 (define (lookup x env)
   ;; (printf "lookup ~a in environment ~a\n" x env)
   (match env
     ['() #f]
     [(cons (cons k v) t) (if (equal? x k) v (lookup x t))]))
 
-(: make-lambda ((Listof Any) Env -> (List Symbol Any Env)))
+(: make-lambda ((Listof Exp) Env -> (List Symbol Exp Env)))
 (define (make-lambda e env)
   ;; (printf "make lambda with e=~a\n" e)
   (list 'closure e env))
 
-;; (define (const? e)
-;;   (or (boolean? e)
-;;       (integer? e)))
+(: const? (Exp -> Boolean : (U Boolean Integer)))
+(define (const? e)
+  (or (boolean? e)
+      (exact-integer? e)))
 
 ;; (define (is-tag? t e)
 ;;   (eq? t (car e)))
