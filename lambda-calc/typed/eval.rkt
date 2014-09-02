@@ -21,29 +21,35 @@
   (or (boolean? e)
       (exact-integer? e)))
 
-;; (define (is-tag? t e)
-;;   (eq? t (car e)))
+(: is-tag? (Symbol (Listof Exp) -> Boolean))
+(define (is-tag? t e)
+  (eq? t (car e)))
 
-;; (define (closure? e)
-;;   (is-tag? 'closure e))
+(: closure? ((Listof Exp) -> Boolean))
+(define (closure? e)
+  (is-tag? 'closure e))
 
-;; (define (delay? e)
-;;   (is-tag? 'delay e))
+(: delay? ((Listof Exp) -> Boolean))
+(define (delay? e)
+  (is-tag? 'delay e))
 
-;; (define (force? e)
-;;   (is-tag? 'force e))
+(: force? ((Listof Exp) -> Boolean))
+(define (force? e)
+  (is-tag? 'force e))
 
-;; (define (thunk? e)
-;;   (is-tag? 'thunk e))
+(: thunk? ((Listof Exp) -> Boolean))
+(define (thunk? e)
+  (is-tag? 'thunk e))
+
+(: lambda? ((Listof Exp) -> Boolean))
+(define (lambda? e)
+  (is-tag? 'fun e))
 
 ;; (define (make-thunk e)
 ;;   (cons 'thunk e))
 
 ;; (define (force-thunk e)
 ;;   (if (thunk? e) (cdr e) (printf "Not a thunk, cannot force\n")))
-
-;; (define (lambda? e)
-;;   (is-tag? 'fun e))
 
 ;; (define (single? e)
 ;;   (cond ((empty? e)       #f)
