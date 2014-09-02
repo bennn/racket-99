@@ -45,21 +45,26 @@
 (define (lambda? e)
   (is-tag? 'fun e))
 
-;; (define (make-thunk e)
-;;   (cons 'thunk e))
+(: single? ((Listof Exp) -> Boolean)) 
+(define (single? e)
+  (cond ((empty? e)       #f)
+        ((empty? (cdr e)) #t)
+        (else             #f)))
 
-;; (define (force-thunk e)
-;;   (if (thunk? e) (cdr e) (printf "Not a thunk, cannot force\n")))
+(: app? ((Listof Exp) -> Boolean))
+(define (app? e)
+  (cond ((empty? e)       #f)
+        ((empty? (cdr e)) #f)
+        (else             #t)))
 
-;; (define (single? e)
-;;   (cond ((empty? e)       #f)
-;;         ((empty? (cdr e)) #t)
-;;         (else             #f)))
+; TODO make a 'thunk' type?
+(: make-thunk (Exp -> (Pairof Symbol Exp)))
+(define (make-thunk e)
+  (cons 'thunk e))
 
-;; (define (app? e)
-;;   (cond ((empty? e)       #f)
-;;         ((empty? (cdr e)) #f)
-;;         (else             #t)))
+(: force-thunk ((Listof Exp) -> Exp))
+(define (force-thunk e)
+  (if (thunk? e) (cdr e) #f)); (printf "Not a thunk, cannot force\n")))
 
 ;; ;eval takes an expression and an environment to a value
 ;; (define (eval e env)
