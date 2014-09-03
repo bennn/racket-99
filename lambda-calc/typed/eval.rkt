@@ -92,8 +92,21 @@
 (: eval ((Listof Exp) Env -> Exp))
 (define (eval e env)
   (if (empty? e)
-      #t
-      #f))
+      '()
+      (if (empty? (cdr e))
+          ; singleton
+          (cond [(symbol? e)       (lookup e env)]
+                [(or (closure? e)
+                     (const?   e)   e)]
+                [else               (eval (car e) env)])
+          (cond [(delay? e)        (make-thunk  (second e))]
+                ;; [(force? e)        (eval (force-thunk (eval (second e) env)) env)]
+                [(lambda?     e)        (make-lambda e env)]
+                ;; [(app?   e)        (let* ([f (eval (first e)  env)]
+                ;;                           [v (eval (second e) env)]
+                ;;                           [r (apply f v)])
+                ;;                      (if (empty? (cddr e)) r (eval (cons r (cddr e)) env)))]
+                [else              (printf "Malformed expression ~a\n" e)]))))
       
 
 (: apply ((List Symbol (List Symbol Symbol (Listof Any)) Env) Exp -> Exp))
