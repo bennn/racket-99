@@ -66,8 +66,9 @@
 (define (force-thunk e)
   (if (thunk? e) (cdr e) #f)); (printf "Not a thunk, cannot force\n")))
 
-;; ;eval takes an expression and an environment to a value
+; TODO value type?
 ;; (define (eval e env)
+;;   ;eval takes an expression and an environment to a value
 ;;   ;; (printf "eval ~a\n" e)
 ;;   (cond
 ;;    ; look up symbols
@@ -88,12 +89,20 @@
 ;;    ; don't know. Assume it's a singleton list.
 ;;    (else        (printf "Malformed expression ~a\n" e))))
 
-;; ; apply takes a function and an argument to a value
-;; (define (apply f val)
-;;   (match f
-;;     [(list 'closure e env) (match e
-;;                              [(list 'fun var exp) (eval exp (cons (cons var val) env))]
-;;                              [_ (printf "Badly formatted closure\n")])]
-;;     [_ (printf "Not a closure, cannot apply\n")]))
+(: eval ((Listof Exp) Env -> Exp))
+(define (eval e env)
+  (if (empty? e)
+      #t
+      #f))
+      
 
-;; (provide eval)
+(: apply ((List Symbol (List Symbol Symbol (Listof Any)) Env) Exp -> Exp))
+(define (apply f val)
+  ; apply takes a function and an argument to a value
+  (match f
+    [(list 'closure e env) (match e
+                             [(list 'fun var exp) (eval exp (cons (cons var val) env))]
+                             [_ (printf "Badly formatted closure\n")])]
+    [_ (printf "Not a closure, cannot apply\n")]))
+
+(provide eval)
