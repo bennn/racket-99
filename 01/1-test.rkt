@@ -1,7 +1,7 @@
 #lang racket
 
 (require
-         rackunit-chk/rackunit/chk
+         rackunit/chk
          "1.rkt")
 
 (chk
