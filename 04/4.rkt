@@ -12,7 +12,8 @@
 ;; MATCHING
 (define (my-length xs)
   (match xs
-    [(cons h t) (+ 1 (my-length t))]
-    [empty 0]))
+    ['() 0]
+    [(cons h '()) 1]
+    [(cons h t) (+ 1 (my-length t))]))
 
 (provide my-length)
